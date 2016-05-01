@@ -169,6 +169,29 @@ function getAllEmails(auth) {
 											}
 										}
 									});
+									var threshHoldLow = false;
+									
+									if(emailBodyArray.length < 30){
+										threshHoldLow = true;
+									}
+																		
+									if(threshHoldLow){
+										if(count > 1){
+											var sentiment = "positive";
+										}else if(count < -1){
+											var sentiment = "negative";
+										}else{
+											var sentiment = "neutral";
+										}
+									}else{
+										if(count > 6){
+											var sentiment = "positive";
+										}else if(count < -6){
+											var sentiment = "negative";
+										}else{
+											var sentiment = "neutral";
+										}
+									}
 									
 									if(emailBodyText.length > 2000){
 										emailBodyText = emailBodyText.substring(0, 2000);
@@ -179,6 +202,7 @@ function getAllEmails(auth) {
 									currentEmailObject['body'] = emailBodyText;
 									currentEmailObject['timestamp'] = parseInt(response.internalDate);
 									currentEmailObject['sentimentNumber'] = count;
+									currentEmailObject['sentiment'] = sentiment;
 									//DO THE SENTIMENT ANALYSIS, CHECK STEMMING
 									allMessages.push(currentEmailObject);
 								}

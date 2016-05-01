@@ -1,8 +1,26 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+	font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
-a {
-  color: #00B7FF;
+.emailBox{
+	padding: 40px;
+	padding-left: 20%;
+	padding-right: 20%;
+	border-radius: 2px;
+	border: solid;
+	border-color: antiquewhite;
+	
+}
+
+.positive{
+	background-color:darkseagreen;
+	color: white;
+}
+.negative{
+	background-color: lightcoral;
+	color: white;
+}
+.neutral{
+	background-color: lightgray;
+	color: black;
 }

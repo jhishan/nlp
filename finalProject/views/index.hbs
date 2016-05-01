@@ -1,6 +1,8 @@
 <h1>Email Tools</h1>
 {{#each messages}}
-    <h2>{{subject}}</h2>
-    <p>{{sentimentNumber}}</p>
-    <p>{{body}}</p>
+    <div class="{{sentiment}} emailBox">
+        <h2>{{subject}}</h2>
+        <p>{{sentimentNumber}}</p>
+        <p>{{body}}</p>
+    </div>
 {{/each}}
