@@ -4,7 +4,6 @@ var atob = require('atob');
 var afinn = require('../afinn.json');
 var Snowball = require('snowball');
 var stemmer = new Snowball('English');
-
 allMessages = [];
 
 /*
@@ -206,14 +205,12 @@ function getAllEmails(auth) {
 									//DO THE SENTIMENT ANALYSIS, CHECK STEMMING
 									allMessages.push(currentEmailObject);
 								}
-							}
-								
+							}		
 						}
 					}                    
 				});
 			}
 		});
-		  
 	});
 }
 
