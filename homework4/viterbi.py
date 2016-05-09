@@ -9,6 +9,8 @@ word_used_as_pos = {}
 
 current_sentence = []
 current_pos_sequence = []
+
+# some needed parsing
 for line in training_file:
     line = line.split("\t")
     if not len(line) < 2:
@@ -44,6 +46,7 @@ for line in training_file:
 
 pos_prev_next_dict = {}
 
+# build prior probability table
 for pos_sentence in pos_sequences:
     for index, current_pos in enumerate(pos_sentence):
         if index == 0:
@@ -100,7 +103,7 @@ for line in working_file:
     else:
         line = line.strip('\n')
         current_sentence.append(line)
-
+# do naive virturbi
 for sentence in output_sentences:
     output_sentence = []
     for index, word in enumerate(sentence):
@@ -131,10 +134,14 @@ for sentence in output_sentences:
                 total = 0
                 previous_pos = output_sentence[index-1][1]
                 probability_that_pos_comes_after_prev = 0
-                for pos in pos_prev_next_dict[previous_pos]:
-                    total += pos_prev_next_dict[previous_pos][pos]
-                if current_pos in pos_prev_next_dict[previous_pos]:
-                    probability_that_pos_comes_after_prev = pos_prev_next_dict[previous_pos][current_pos] / float(total)
+                if previous_pos in pos_prev_next_dict:
+                    for pos in pos_prev_next_dict[previous_pos]:
+                        total += pos_prev_next_dict[previous_pos][pos]
+                    if total == 0:
+                        pos_prev_next_dict[previous_pos][current_pos] = 0
+                    else:
+                        if current_pos in pos_prev_next_dict[previous_pos]:
+                            probability_that_pos_comes_after_prev = pos_prev_next_dict[previous_pos][current_pos] / float(total)
 
                 total = 0;
                 if word in word_used_as_pos:
@@ -155,18 +162,19 @@ for sentence in output_sentences:
                 max_count = bigram[1]
                 max_pos = bigram[0]
         if max_pos == '':
+            greatest_pos = ''
             if index != 0:
                 previous_pos = output_sentence[index-1][1]
                 greatest = 0
-                greatest_pos = ''
-                for pos in pos_prev_next_dict[previous_pos]:
-                    if pos_prev_next_dict[previous_pos][pos] > greatest:
-                        greatest = pos_prev_next_dict[previous_pos][pos]
-                        greatest = pos
+                if previous_pos in pos_prev_next_dict:
+                    greatest_pos = ''
+                    for pos in pos_prev_next_dict[previous_pos]:
+                        if pos_prev_next_dict[previous_pos][pos] > greatest:
+                            greatest = pos_prev_next_dict[previous_pos][pos]
+                            greatest_pos = pos
             max_pos = greatest_pos
         if max_pos == '':
-            max_pos = 'DT'
-        #if max_pos == ''then its out of vocab word
+            max_pos = 'NNP'
         output_sentence.append([word, max_pos])
     for index, bigram in enumerate(output_sentence):
         word = bigram[0]
@@ -174,4 +182,3 @@ for sentence in output_sentences:
 
         output_file.write(word + "\t" + pos + "\n")
     output_file.write("\n")
-    #for pos in output_sentence:
