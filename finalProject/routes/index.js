@@ -10,7 +10,7 @@ allMessages = [];
 google api stuff.
 
 A lot of the standard code for connecting is taking
-right from developer site. I did not write any of it. 
+right from developer site. I did not write any of it.
 
 I will label the code that is actually a part of my project
 */
@@ -122,7 +122,7 @@ function getAllEmails(auth) {
 			return;
 		}
 		var messageList = response.messages;
-				
+
 		messageList.forEach(function(message){
 			var messageId = message.id;
 			getMessage(messageId);
@@ -145,35 +145,37 @@ function getAllEmails(auth) {
 								response.payload.headers.forEach(function(header){
 									if(header.name == 'Subject'){
 										emailSubject = header.value;
-									} 
+									}
 								});
-								
+
 								if(emailSubject.length > 0){
 									var emailBodyArray = emailBodyText.toLowerCase().split(" ");
 									var count = 0;
+									var lengthOfArray = emailBodyArray.length
+									var index = 0
 									emailBodyArray.forEach(function(word){
 										if(afinn.hasOwnProperty(word)){
-											count += afinn[word];
+											if(index > 3 && index < (lengthOfArray - 3)){
+												count += afinn[word];
+											}
 										}else{
 											stemmer.setCurrent(word);
 											stemmer.stem();
 											var stemmedWord = stemmer.getCurrent();
 											if(afinn.hasOwnProperty(stemmedWord)){
-												count += afinn[stemmedWord];
-												/*
-												console.log("original word is " + word);
-												console.log("stem is " + stemmedWord);
-												console.log();
-												*/	
+												if(index > 3 && index < (lengthOfArray -3)){
+													count += afinn[stemmedWord];
+												}
 											}
 										}
+										index += 1;
 									});
 									var threshHoldLow = false;
-									
+
 									if(emailBodyArray.length < 30){
 										threshHoldLow = true;
 									}
-																		
+
 									if(threshHoldLow){
 										if(count > 1){
 											var sentiment = "positive";
@@ -191,12 +193,12 @@ function getAllEmails(auth) {
 											var sentiment = "neutral";
 										}
 									}
-									
+
 									if(emailBodyText.length > 2000){
 										emailBodyText = emailBodyText.substring(0, 2000);
 										emailBodyText = emailBodyText + " ..."
-									}		
-								
+									}
+
 									currentEmailObject['subject'] = emailSubject;
 									currentEmailObject['body'] = emailBodyText;
 									currentEmailObject['timestamp'] = parseInt(response.internalDate);
@@ -205,9 +207,9 @@ function getAllEmails(auth) {
 									//DO THE SENTIMENT ANALYSIS, CHECK STEMMING
 									allMessages.push(currentEmailObject);
 								}
-							}		
+							}
 						}
-					}                    
+					}
 				});
 			}
 		});
