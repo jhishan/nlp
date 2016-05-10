@@ -24,7 +24,7 @@ def cos_sim(vect1, vect2):
 
     return ans
 
-closed_class_stop_words = ['a', 'the', 'an', 'and', 'or', 'but', 'about', 'above', 'after', 'along', 'amid', 'among', \
+closed = ['a', 'the', 'an', 'and', 'or', 'but', 'about', 'above', 'after', 'along', 'amid', 'among', \
                            'as', 'at', 'by', 'for', 'from', 'in', 'into', 'like', 'minus', 'near', 'of', 'off', 'on', \
                            'onto', 'out', 'over', 'past', 'per', 'plus', 'since', 'till', 'to', 'under', 'until', 'up', \
                            'via', 'vs', 'with', 'that', 'can', 'cannot', 'could', 'may', 'might', 'must', \
@@ -59,7 +59,7 @@ for q in queries:
         orig_strip = (q.rstrip('\r\n')).split(" ")
         new_strip = []
         for item in orig_strip:
-            if item not in closed_class_stop_words:
+            if item not in closed:
                 new_strip.append(item)
         dict_of_queries[last_id_set] = dict_of_queries[last_id_set] + new_strip
 
@@ -125,7 +125,7 @@ for q in abstract_queries:
         orig_set = (q.rstrip('\r\n')).split(" ")
         new_set = []
         for item in orig_set:
-            if item not in closed_class_stop_words:
+            if item not in closed:
                 new_set.append(item)
         dict_of_abstract_queries[last_id_set] = dict_of_abstract_queries[last_id_set] + new_set
     if q.startswith('.W'):
@@ -228,9 +228,7 @@ countof = len(final_vector)
 for index,values in enumerate(final_vector):
     values.sort(key=lambda x: x[2])
     values.reverse()
-    print index
-    print countof
-    print " "
+
     final_output_array.append(values)
 
 output_file = open("output.txt", "w")
@@ -241,10 +239,3 @@ for values in final_output_array:
         second = str(group[1] + 1)
         third = str(group[2])
         output_file.write(first +' '+second+ ' ' +third + '\n')
-
-
-
-
-
-
-
